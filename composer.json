@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "Tidio\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "Tidio\\Tests\\": "tests/"
         }
     },
     "replace": {
