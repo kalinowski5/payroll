@@ -29,6 +29,16 @@ final class Employee
         $this->baseSalary = $baseSalary;
     }
 
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    public function employmentDate(): \DateTimeImmutable
+    {
+        return $this->employmentDate;
+    }
+
     public function department(): Department
     {
         return $this->department;
