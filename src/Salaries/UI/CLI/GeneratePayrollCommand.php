@@ -9,7 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'tidio:payroll:generate')]
+#[AsCommand(name: 'xyz:payroll:generate')]
 final class GeneratePayrollCommand extends Command //@TODO: Test me!
 {
     protected function execute(InputInterface $input, OutputInterface $output): int
