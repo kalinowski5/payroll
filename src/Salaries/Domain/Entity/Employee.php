@@ -2,9 +2,7 @@
 declare(strict_types=1);
 
 
-namespace XYZ\Salaries\Domain;
-
-use XYZ\Salaries\Domain\Entity\Department;
+namespace XYZ\Salaries\Domain\Entity;
 
 final class Employee
 {
@@ -50,8 +48,14 @@ final class Employee
         return $this->baseSalary;
     }
 
-    public function totalSalary(): int //@TODO: Money
+    public function totalSalaryAt(\DateTimeImmutable $date): int //@TODO: Money
     {
+        $percentageSupplement = $this->department->percentageSalarySupplement();
+
+        if ($percentageSupplement) {
+            return $this->baseSalary + (int) ($this->baseSalary * $percentageSupplement->percentage() / 100);
+        }
+
         return $this->baseSalary;
     }
 }
