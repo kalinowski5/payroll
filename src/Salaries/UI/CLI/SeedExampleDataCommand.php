@@ -11,6 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Uid\Uuid;
 use XYZ\Salaries\Domain\Entity\Department;
+use XYZ\Salaries\Domain\Entity\Employee;
 use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 
 #[AsCommand(name: 'xyz:payroll:seed-example-data')]
@@ -36,6 +37,21 @@ final class SeedExampleDataCommand extends Command //@TODO: Test me!
         foreach ($departments as $department) {
             $this->entityManager->persist($department);
         }
+
+        $this->entityManager->flush();
+
+        $employees = [
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], 10000),
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], 10000),
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], 40000),
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[2], 10000),
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[3], 10000),
+        ];
+
+        foreach ($employees as $employee) {
+            $this->entityManager->persist($employee);
+        }
+
         $this->entityManager->flush();
 
         $output->writeln('Example data was added to database!');

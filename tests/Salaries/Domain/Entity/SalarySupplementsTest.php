@@ -20,7 +20,7 @@ class SalarySupplementsTest extends TestCase
         );
 
         $employee = new Employee(
-            'e3bfc3d9-cf7c-405e-84a2-0a1a9bed6539',
+            Uuid::fromString('e3bfc3d9-cf7c-405e-84a2-0a1a9bed6539'),
             new \DateTimeImmutable('2020-01-01'),
             $department,
             1100_00
