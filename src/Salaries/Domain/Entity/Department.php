@@ -7,6 +7,7 @@ namespace XYZ\Salaries\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use XYZ\Salaries\Domain\ValueObject\BaseSalary;
 use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,7 +26,10 @@ final class Department
     #[ORM\OneToMany(mappedBy: 'department', targetEntity: Employee::class)]
     private Collection $empolyees;
 
+    #[ORM\Embedded(class: PercentageSupplement::class)]
     private ?PercentageSupplement $percentageSalarySupplement = null;
+
+    #[ORM\Embedded(class: SenioritySupplement::class)]
     private ?SenioritySupplement $senioritySalarySupplement = null;
 
     public function __construct(Uuid $id, string $name, PercentageSupplement|SenioritySupplement $salarySupplement)

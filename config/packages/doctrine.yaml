@@ -12,8 +12,8 @@ doctrine:
         mappings:
             Salaries:
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Salaries/Domain/Entity'
-                prefix: 'XYZ\Salaries\Domain\Entity'
+                dir: '%kernel.project_dir%/src/Salaries/Domain'
+                prefix: 'XYZ\Salaries\Domain'
                 alias: Salaries
 
 when@test:

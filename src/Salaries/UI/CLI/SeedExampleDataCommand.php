@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace XYZ\Salaries\UI\CLI;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Money\Money;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,6 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Uid\Uuid;
 use XYZ\Salaries\Domain\Entity\Department;
 use XYZ\Salaries\Domain\Entity\Employee;
+use XYZ\Salaries\Domain\ValueObject\BaseSalary;
 use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 
 #[AsCommand(name: 'xyz:payroll:seed-example-data')]
@@ -28,6 +30,7 @@ final class SeedExampleDataCommand extends Command //@TODO: Test me!
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        //@TODO: Extract into service
         $departments = [
             new Department(Uuid::v4(), 'Human Resources', new PercentageSupplement(15)),
             new Department(Uuid::v4(), 'Customer Service', new PercentageSupplement(10)),
@@ -41,11 +44,11 @@ final class SeedExampleDataCommand extends Command //@TODO: Test me!
         $this->entityManager->flush();
 
         $employees = [
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], 10000),
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], 10000),
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], 40000),
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[2], 10000),
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[3], 10000),
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], new BaseSalary(Money::USD(10000))),
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], new BaseSalary(Money::USD(24000))),
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[2], new BaseSalary(Money::USD(50000))),
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[3], new BaseSalary(Money::USD(30000))),
+            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[2], new BaseSalary(Money::USD(10000))),
         ];
 
         foreach ($employees as $employee) {

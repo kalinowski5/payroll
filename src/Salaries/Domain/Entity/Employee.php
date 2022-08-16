@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace XYZ\Salaries\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Money\Money;
 use Symfony\Component\Uid\Uuid;
+use XYZ\Salaries\Domain\ValueObject\BaseSalary;
 
 #[ORM\Entity]
 final class Employee
@@ -14,18 +16,20 @@ final class Employee
     #[ORM\Column(type: "string", unique: true)]
     private string $id;
 
+    #[ORM\Column(type: "date_immutable")]
     private \DateTimeImmutable $employmentDate;
 
     #[ORM\ManyToOne(targetEntity: Department::class, inversedBy: 'employees')]
     private Department $department;
 
-    private int $baseSalary; //@TODO: emmedable Money type
+    #[ORM\Embedded(class: BaseSalary::class)]
+    private BaseSalary $baseSalary;
 
     public function __construct(
         Uuid $id,
         \DateTimeImmutable $employmentDate,
         Department $department,
-        int $baseSalary //@TODO: Money
+        BaseSalary $baseSalary
     ) {
         $this->id = (string) $id;
         $this->employmentDate = $employmentDate;
@@ -48,20 +52,24 @@ final class Employee
         return $this->department;
     }
 
-
-    public function baseSalary(): int //@TODO: Money
+    public function baseSalary(): BaseSalary
     {
         return $this->baseSalary;
     }
 
-    public function totalSalaryAt(\DateTimeImmutable $date): int //@TODO: Money
+    public function totalSalaryAt(\DateTimeImmutable $date): Money
     {
         $percentageSupplement = $this->department->percentageSalarySupplement();
 
         if ($percentageSupplement) {
-            return $this->baseSalary + (int) ($this->baseSalary * $percentageSupplement->percentage() / 100);
+            $baseSalaryAmount = $this->baseSalary->value();
+            $supplementAmount = $baseSalaryAmount
+                ->multiply($percentageSupplement->value())
+                ->divide(100);
+
+            return Money::sum($baseSalaryAmount, $supplementAmount);
         }
 
-        return $this->baseSalary;
+        return $this->baseSalary->value();
     }
 }

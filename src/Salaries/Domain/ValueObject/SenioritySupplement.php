@@ -4,19 +4,27 @@ declare(strict_types=1);
 
 namespace XYZ\Salaries\Domain\ValueObject;
 
+use Doctrine\ORM\Mapping as ORM;
+use Money\Currency;
+use Money\Money;
 
+#[ORM\Embeddable]
 final class SenioritySupplement
 {
+    #[ORM\Column(type: "integer", nullable: true, options: ["comment" => 'Amount in cents'])]
+    private int $amount;
 
-    public function __construct(private readonly int $amountPerYearOfEmployment) //@TODO: Money
+    #[ORM\Column(type: "string", length: 3, nullable: true)]
+    private string $currency;
+
+    public function __construct(Money $valuePerYearOfEmployment)
     {
+        $this->amount = (int) $valuePerYearOfEmployment->getAmount();
+        $this->currency = $valuePerYearOfEmployment->getCurrency()->getCode();
     }
 
-
-    public function amountPerYearOfEmployment(): int
+    public function valuePerYearOfEmployment(): Money
     {
-        return $this->amountPerYearOfEmployment;
+        return new Money($this->amount, new Currency($this->currency));
     }
-
-
 }
