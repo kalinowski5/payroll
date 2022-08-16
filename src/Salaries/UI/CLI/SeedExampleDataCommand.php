@@ -14,7 +14,9 @@ use Symfony\Component\Uid\Uuid;
 use XYZ\Salaries\Domain\Entity\Department;
 use XYZ\Salaries\Domain\Entity\Employee;
 use XYZ\Salaries\Domain\ValueObject\BaseSalary;
+use XYZ\Salaries\Domain\ValueObject\EmployeeName;
 use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
+use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
 
 #[AsCommand(name: 'xyz:payroll:seed-example-data')]
 final class SeedExampleDataCommand extends Command //@TODO: Test me!
@@ -34,7 +36,7 @@ final class SeedExampleDataCommand extends Command //@TODO: Test me!
         $departments = [
             new Department(Uuid::v4(), 'Human Resources', new PercentageSupplement(15)),
             new Department(Uuid::v4(), 'Customer Service', new PercentageSupplement(10)),
-            new Department(Uuid::v4(), 'Marketing', new PercentageSupplement(10)),
+            new Department(Uuid::v4(), 'Marketing', new SenioritySupplement(Money::USD(5000))),
             new Department(Uuid::v4(), 'IT', new PercentageSupplement(5)),
         ];
         foreach ($departments as $department) {
@@ -44,11 +46,11 @@ final class SeedExampleDataCommand extends Command //@TODO: Test me!
         $this->entityManager->flush();
 
         $employees = [
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], new BaseSalary(Money::USD(10000))),
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[0], new BaseSalary(Money::USD(24000))),
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[2], new BaseSalary(Money::USD(50000))),
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[3], new BaseSalary(Money::USD(30000))),
-            new Employee(Uuid::v4(), new \DateTimeImmutable(), $departments[2], new BaseSalary(Money::USD(10000))),
+            new Employee(Uuid::v4(), new EmployeeName('John', 'Doe'), new \DateTimeImmutable(), $departments[0], new BaseSalary(Money::USD(10000))),
+            new Employee(Uuid::v4(), new EmployeeName('John', 'Doe'), new \DateTimeImmutable(), $departments[0], new BaseSalary(Money::USD(24000))),
+            new Employee(Uuid::v4(), new EmployeeName('John', 'Doe'), new \DateTimeImmutable(), $departments[2], new BaseSalary(Money::USD(50000))),
+            new Employee(Uuid::v4(), new EmployeeName('John', 'Doe'), new \DateTimeImmutable(), $departments[3], new BaseSalary(Money::USD(30000))),
+            new Employee(Uuid::v4(), new EmployeeName('John', 'Doe'), new \DateTimeImmutable(), $departments[2], new BaseSalary(Money::USD(10000))),
         ];
 
         foreach ($employees as $employee) {

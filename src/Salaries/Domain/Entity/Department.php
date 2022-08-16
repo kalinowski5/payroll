@@ -7,7 +7,6 @@ namespace XYZ\Salaries\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use XYZ\Salaries\Domain\ValueObject\BaseSalary;
 use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,7 +20,7 @@ final class Department
     private string $id;
 
     #[ORM\Column(type: "string")]
-    private string $name; //@TODO: VO?
+    private string $name;
 
     #[ORM\OneToMany(mappedBy: 'department', targetEntity: Employee::class)]
     private Collection $empolyees;

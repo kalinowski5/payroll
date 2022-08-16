@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Money\Money;
 use Symfony\Component\Uid\Uuid;
 use XYZ\Salaries\Domain\ValueObject\BaseSalary;
+use XYZ\Salaries\Domain\ValueObject\EmployeeName;
 
 #[ORM\Entity]
 final class Employee
@@ -15,6 +16,9 @@ final class Employee
     #[ORM\Id]
     #[ORM\Column(type: "string", unique: true)]
     private string $id;
+
+    #[ORM\Embedded(class: EmployeeName::class, columnPrefix: false)]
+    private EmployeeName $name;
 
     #[ORM\Column(type: "date_immutable")]
     private \DateTimeImmutable $employmentDate;
@@ -27,11 +31,13 @@ final class Employee
 
     public function __construct(
         Uuid $id,
+        EmployeeName $name,
         \DateTimeImmutable $employmentDate,
         Department $department,
         BaseSalary $baseSalary
     ) {
         $this->id = (string) $id;
+        $this->name = $name;
         $this->employmentDate = $employmentDate;
         $this->department = $department;
         $this->baseSalary = $baseSalary;
@@ -45,6 +51,11 @@ final class Employee
     public function employmentDate(): \DateTimeImmutable
     {
         return $this->employmentDate;
+    }
+
+    public function name(): EmployeeName
+    {
+        return $this->name;
     }
 
     public function department(): Department
