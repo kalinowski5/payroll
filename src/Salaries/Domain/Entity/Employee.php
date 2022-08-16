@@ -4,21 +4,13 @@ declare(strict_types=1);
 
 namespace XYZ\Salaries\Domain\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
-#[ORM\Entity]
 final class Employee
 {
-    #[ORM\Id]
-    #[ORM\Column(type: "string", unique: true)]
     private string $id;
-
     private \DateTimeImmutable $employmentDate;
-
-    #[ORM\ManyToOne(targetEntity: Department::class, inversedBy: 'employees')]
     private Department $department;
-
     private int $baseSalary; //@TODO: emmedable Money type
 
     public function __construct(

@@ -12,7 +12,8 @@ doctrine:
         mappings:
             Salaries:
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Salaries/Domain/Entity'
+                type: xml
+                dir: '%kernel.project_dir%/src/Salaries/Infrastructure/ORM/Mapping'
                 prefix: 'XYZ\Salaries\Domain\Entity'
                 alias: Salaries
 
