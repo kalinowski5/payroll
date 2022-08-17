@@ -11,7 +11,7 @@ use XYZ\Salaries\Domain\ValueObject\BaseSalary;
 use XYZ\Salaries\Domain\ValueObject\EmployeeName;
 
 #[ORM\Entity]
-final class Employee
+class Employee
 {
     #[ORM\Id]
     #[ORM\Column(type: "string", unique: true)]
@@ -40,7 +40,7 @@ final class Employee
         $this->name = $name;
         $this->employmentDate = $employmentDate;
         $this->department = $department;
-        $this->baseSalary = $baseSalary;
+        $this->baseSalary = $baseSalary; //@TODO: assert the currency match department's currency
     }
 
     public function id(): Uuid

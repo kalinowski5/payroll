@@ -9,6 +9,7 @@ use Symfony\Component\Uid\Uuid;
 use XYZ\Salaries\Domain\Entity\Department;
 use XYZ\Salaries\Domain\Entity\Employee;
 use XYZ\Salaries\Domain\ValueObject\BaseSalary;
+use XYZ\Salaries\Domain\ValueObject\EmployeeName;
 use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 
 class SalarySupplementsTest extends TestCase
@@ -23,6 +24,7 @@ class SalarySupplementsTest extends TestCase
 
         $employee = new Employee(
             Uuid::fromString('e3bfc3d9-cf7c-405e-84a2-0a1a9bed6539'),
+            new EmployeeName('John', 'Doe'),
             new \DateTimeImmutable('2020-01-01'),
             $department,
             new BaseSalary(Money::USD(1100_00)),

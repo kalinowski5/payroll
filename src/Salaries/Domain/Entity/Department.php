@@ -7,13 +7,15 @@ namespace XYZ\Salaries\Domain\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Money\Currency;
+use Money\Money;
 use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
-final class Department
+class Department
 {
     #[ORM\Id]
     #[ORM\Column(type: "string", unique: true)]
@@ -23,26 +25,32 @@ final class Department
     private string $name;
 
     #[ORM\OneToMany(mappedBy: 'department', targetEntity: Employee::class)]
-    private Collection $empolyees;
+    private Collection $employees;
 
-    #[ORM\Embedded(class: PercentageSupplement::class)]
-    private ?PercentageSupplement $percentageSalarySupplement = null;
+    #[ORM\Column(type: "integer", nullable: true)]
+    private ?int $percentageSalarySupplement = null;
 
-    #[ORM\Embedded(class: SenioritySupplement::class)]
-    private ?SenioritySupplement $senioritySalarySupplement = null;
+    #[ORM\Column(type: "integer", nullable: true, options: ["comment" => 'Amount in cents'])]
+    private ?int $senioritySalarySupplementAmount = null;
+
+    #[ORM\Column(type: "string", length: 3, nullable: true)]
+    private ?string $senioritySalarySupplementCurrency = null;
 
     public function __construct(Uuid $id, string $name, PercentageSupplement|SenioritySupplement $salarySupplement)
     {
         $this->id = (string) $id;
         $this->name = $name;
-        $this->empolyees = new ArrayCollection();
+        $this->employees = new ArrayCollection();
+
+        //PercentageSupplement and SenioritySupplement aren't embeddable because of Doctrine's limitations: https://stackoverflow.com/a/45262491/2432403
 
         if ($salarySupplement instanceof PercentageSupplement) {
-            $this->percentageSalarySupplement = $salarySupplement;
+            $this->percentageSalarySupplement = $salarySupplement->value();
         }
 
         if ($salarySupplement instanceof SenioritySupplement) {
-            $this->senioritySalarySupplement = $salarySupplement;
+            $this->senioritySalarySupplementAmount = (int) $salarySupplement->valuePerYearOfEmployment()->getAmount();
+            $this->senioritySalarySupplementCurrency = (string) $salarySupplement->valuePerYearOfEmployment()->getCurrency();
         }
     }
 
@@ -61,22 +69,32 @@ final class Department
      */
     public function employees(): Collection
     {
-        return $this->empolyees;
+        return $this->employees;
     }
 
     public function hire(Employee $employee): void
     {
-        $this->empolyees->add($employee);
+        $this->employees->add($employee);
     }
 
     public function percentageSalarySupplement(): ?PercentageSupplement
     {
-        return $this->percentageSalarySupplement;
+        if (!is_null($this->percentageSalarySupplement)) {
+            return new PercentageSupplement($this->percentageSalarySupplement);
+        }
+
+        return null;
     }
 
     public function senioritySalarySupplement(): ?SenioritySupplement
     {
-        return $this->senioritySalarySupplement;
+        if (!is_null($this->senioritySalarySupplementAmount)) {
+            return new SenioritySupplement(
+                new Money($this->senioritySalarySupplementAmount, new Currency($this->senioritySalarySupplementCurrency))
+            );
+        }
+
+        return null;
     }
 
 }

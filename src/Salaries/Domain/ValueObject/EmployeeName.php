@@ -21,6 +21,16 @@ final class EmployeeName
         $this->lastName = $lastName;
     }
 
+    public function firstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function lastName(): string
+    {
+        return $this->lastName;
+    }
+
     public function __toString(): string
     {
         return sprintf("%s %s", $this->firstName, $this->lastName);

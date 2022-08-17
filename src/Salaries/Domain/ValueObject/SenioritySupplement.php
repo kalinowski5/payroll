@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Money\Currency;
 use Money\Money;
 
-#[ORM\Embeddable]
 final class SenioritySupplement
 {
     #[ORM\Column(type: "integer", nullable: true, options: ["comment" => 'Amount in cents'])]
