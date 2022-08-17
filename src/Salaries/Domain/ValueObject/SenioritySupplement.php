@@ -10,6 +10,8 @@ use Money\Money;
 
 final class SenioritySupplement
 {
+    public const MAX_NUMBER_OF_YEARS = 10; //After this number of years, the salary is not increased anymore
+
     #[ORM\Column(type: "integer", nullable: true, options: ["comment" => 'Amount in cents'])]
     private int $amount;
 
@@ -29,5 +31,10 @@ final class SenioritySupplement
             //@phpstan-ignore-next-line - Currency is always non-empty-string
             new Currency($this->currency),
         );
+    }
+
+    public function name(): string
+    {
+        return 'Seniority';
     }
 }

@@ -9,6 +9,8 @@ use Money\Money;
 use Symfony\Component\Uid\Uuid;
 use XYZ\Salaries\Domain\ValueObject\BaseSalary;
 use XYZ\Salaries\Domain\ValueObject\EmployeeName;
+use XYZ\Salaries\Domain\ValueObject\Payslip;
+use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
 
 #[ORM\Entity]
 class Employee
@@ -68,19 +70,43 @@ class Employee
         return $this->baseSalary;
     }
 
-    public function totalSalaryAt(\DateTimeImmutable $date): Money
+    public function payslipAt(\DateTimeImmutable $date): Payslip
     {
+        $baseSalaryAmount = $this->baseSalary->value();
+        $emptyPayslip = Payslip::empty($baseSalaryAmount->getCurrency());
+
+
+        if ($date < $this->employmentDate) {
+            return $emptyPayslip;
+        }
+
         $percentageSupplement = $this->department->percentageSalarySupplement();
+        $senioritySupplement = $this->department->senioritySalarySupplement();
 
         if ($percentageSupplement) {
-            $baseSalaryAmount = $this->baseSalary->value();
             $supplementAmount = $baseSalaryAmount
                 ->multiply($percentageSupplement->value())
                 ->divide(100);
 
-            return Money::sum($baseSalaryAmount, $supplementAmount);
+            return new Payslip(
+                $baseSalaryAmount,
+                $supplementAmount,
+                $percentageSupplement->name(),
+            );
         }
 
-        return $this->baseSalary->value();
+        if ($senioritySupplement) {
+            $employedForNumberOfYears = $this->employmentDate()->diff($date)->y;
+            $multiplier = min(SenioritySupplement::MAX_NUMBER_OF_YEARS, $employedForNumberOfYears);
+            $supplementAmount = $senioritySupplement->valuePerYearOfEmployment()->multiply($multiplier);
+
+            return new Payslip(
+                $baseSalaryAmount,
+                $supplementAmount,
+                $senioritySupplement->name(),
+            );
+        }
+
+        return $emptyPayslip;
     }
 }
