@@ -13,7 +13,6 @@ use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
-use function PHPUnit\Framework\assertNotEmpty;
 
 #[ORM\Entity]
 class Department

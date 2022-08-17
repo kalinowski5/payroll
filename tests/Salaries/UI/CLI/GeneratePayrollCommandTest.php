@@ -29,7 +29,6 @@ class GeneratePayrollCommandTest extends KernelTestCase
         $kernel = self::bootKernel();
         $this->application = new Application($kernel);
 
-
         /** @var Registry $registry */
         $registry = $kernel->getContainer()->get('doctrine');
         $em = $registry->getManager();

@@ -16,3 +16,5 @@ jobs:
                   path: src/
                   memory_limit: -1
             - uses: php-actions/phpunit@v3
+              with:
+                  php_extensions: bcmath intl
