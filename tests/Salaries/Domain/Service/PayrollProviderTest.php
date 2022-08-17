@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace XYZ\Tests\Salaries\Domain\Service;
 
-use ContainerG4yH6zA\getDebug_ArgumentResolver_RequestAttribute_InnerService;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
 use XYZ\Salaries\Domain\Entity\Department;

@@ -1,26 +1,20 @@
+# Payroll app
+
 ### System requirements
 * PHP 8.1
 * Composer
 
-### Running instructions 
+### First run
 
-Just run the following commands in your favorite CLI:
+Just run the following command in your favorite CLI: `make init`
 
-1. `composer install`
+SQLite database will be automatically created and filled with sample data. 
 
-2. `bin/console doctrine:database:create`
+### Demo
 
-3. `bin/console doctrine:schema:create`
+In order to generate demo payroll, run:
+`make demo`
 
-4. `bin/console xyz:payroll:seed-example-data`
-
-5. `bin/console xyz:payroll:generate`
-
-
-### Testing
-
-1. `bin/console --env=test doctrine:database:create`
-
-2. `bin/console --env=test doctrine:schema:create`
-
-3. `bin/phpunit`
+### Automated tests
+Unit, integration and application tests are available:
+`make test`
