@@ -10,5 +10,5 @@ interface EmployeeRepository
     /**
      * @return Employee[]
      */
-    public function findAll(): array; //@TODO: sorting arguments
+    public function findAll(): array;
 }

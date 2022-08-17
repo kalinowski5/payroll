@@ -42,12 +42,8 @@ class GeneratePayrollCommandTest extends KernelTestCase
     {
         $command = $this->application->find('xyz:payroll:generate');
         $commandTester = new CommandTester($command);
-        $commandTester->execute([
-            // pass arguments to the helper
-//            'username' => 'Wouter',
-
-            // prefix the key with two dashes when passing options,
-            // e.g: '--some-option' => 'option_value',
+        $commandTester->execute([], [
+            'interactive' => false,
         ]);
 
         $commandTester->assertCommandIsSuccessful();

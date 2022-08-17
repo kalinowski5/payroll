@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-
 namespace XYZ\Salaries\Infrastructure\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -12,7 +11,7 @@ use XYZ\Salaries\Domain\Repository\EmployeeRepository;
 /**
  * @template-extends ServiceEntityRepository<Employee>
  */
-final class EmployeeORMRepository  extends ServiceEntityRepository implements EmployeeRepository
+final class EmployeeORMRepository extends ServiceEntityRepository implements EmployeeRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
