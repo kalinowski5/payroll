@@ -1,5 +1,8 @@
 # Payroll app
 
+### Preview
+![App preview](demo.gif)
+
 ### System requirements
 * PHP 8.1
 * Composer
