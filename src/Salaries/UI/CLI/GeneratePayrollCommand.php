@@ -39,14 +39,14 @@ final class GeneratePayrollCommand extends Command //@TODO: Test me!
         $table = new Table($output);
         $table
             ->setHeaders(['First name', 'Last name', 'Department', 'Base salary', 'Total salary']) //@TODO: More columns
-            ->setRows([]
-//                array_map(fn (Employee $employee) => [
-//                    $employee->name()->firstName(),
-//                    $employee->name()->lastName(),
-//                    $employee->department()->name(),
-//                    $moneyFormatter->format($employee->baseSalary()->value()),
-//                    $moneyFormatter->format($employee->totalSalaryAt($now)),
-//                ], $employees),
+            ->setRows(
+                array_map(fn (Employee $employee) => [
+                    $employee->name()->firstName(),
+                    $employee->name()->lastName(),
+                    $employee->department()->name(),
+                    $moneyFormatter->format($employee->baseSalary()->value()),
+                    $moneyFormatter->format($employee->totalSalaryAt($now)),
+                ], $employees),
             )
         ;
         $table->render();

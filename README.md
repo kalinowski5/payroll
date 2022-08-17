@@ -16,3 +16,11 @@ Just run the following commands in your favorite CLI:
 
 5. `bin/console xyz:payroll:generate`
 
+
+### Testing
+
+1. `bin/console --env=test doctrine:database:create`
+
+2. `bin/console --env=test doctrine:schema:create`
+
+3. `bin/phpunit`
