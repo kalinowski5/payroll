@@ -1,0 +1,4 @@
+services:
+    XYZ\SharedKernel\Domain\Clock:
+        class: XYZ\SharedKernel\Infrastructure\FakeClock
+        public: true

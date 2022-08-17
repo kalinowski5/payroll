@@ -18,6 +18,8 @@ use XYZ\Salaries\Domain\ValueObject\BaseSalary;
 use XYZ\Salaries\Domain\ValueObject\EmployeeName;
 use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
+use XYZ\SharedKernel\Domain\Clock;
+use XYZ\SharedKernel\Infrastructure\FakeClock;
 
 class GeneratePayrollCommandTest extends KernelTestCase
 {
@@ -32,6 +34,10 @@ class GeneratePayrollCommandTest extends KernelTestCase
         /** @var Registry $registry */
         $registry =  $kernel->getContainer()->get('doctrine');
         $this->objectManager = $registry->getManager();
+
+        /** @var FakeClock $clock */
+        $clock = $kernel->getContainer()->get(Clock::class);
+        $clock->givenCurrentDateTimeIs(new \DateTimeImmutable('2022-05-01'));
 
         $this->seedFixtures();
 

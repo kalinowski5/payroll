@@ -13,6 +13,7 @@ use XYZ\Salaries\Domain\Service\PayrollProvider;
 use XYZ\Salaries\Domain\ValueObject\EmployeeName;
 use XYZ\Salaries\Domain\ValueObject\PayrollRow;
 use XYZ\Salaries\Domain\ValueObject\Payslip;
+use XYZ\SharedKernel\Infrastructure\FakeClock;
 
 class PayrollProviderTest extends TestCase
 {
@@ -139,7 +140,9 @@ class PayrollProviderTest extends TestCase
                 $employee3,
             ]);
 
-        $this->systemUnderTest = new PayrollProvider($employeeRepository);
+        $clock = new FakeClock(new \DateTimeImmutable('2020-01-01'));
+
+        $this->systemUnderTest = new PayrollProvider($employeeRepository, $clock);
 
         parent::setUp();
     }

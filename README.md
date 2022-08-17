@@ -8,7 +8,7 @@
 
 Just run the following command in your favorite CLI: `make init`
 
-SQLite database will be automatically created and filled with sample data. 
+SQLite database will be automatically created and filled with sample data.
 
 ### Demo
 
@@ -23,13 +23,14 @@ Unit, integration and application tests are available:
 `make test`
 
 ## Possible improvements
-Things that could be improved if there is more time:
-* Separate Doctrine mappings from entity classes (ie. place XMLs in `Infrastructure` namespace instead of attributes in `Domain`)
+Things that could be improved if there is more time left:
+* Separate Doctrine mappings from entity classes (ie. place XMLs in `Infrastructure` namespace instead of attributes in `Domain` part)
 * Dockerize application
 * Optimize performance for larger data sets, e.g. thousands of employees (change the way how data is filtered and sorted)
-* Split filtering into multiple columns 
+* Split filtering into multiple columns
 * Implement more value objects and add more sophisticated validation rules
 * Add cs-fixer
 * Add behat tests
 * Add mutation tests
+* Resolve minor TODOs left in codebase
 * Implement shared kernel

@@ -7,14 +7,15 @@ use XYZ\Salaries\Domain\Entity\Employee;
 use XYZ\Salaries\Domain\Enum\SortingField;
 use XYZ\Salaries\Domain\Repository\EmployeeRepository;
 use XYZ\Salaries\Domain\ValueObject\PayrollRow;
+use XYZ\SharedKernel\Domain\Clock;
 
 final class PayrollProvider
 {
-    private EmployeeRepository $employeeRepository;
-
-    public function __construct(EmployeeRepository $employeeRepository)
+    public function __construct(
+        private readonly EmployeeRepository $employeeRepository,
+        private readonly Clock $clock,
+    )
     {
-        $this->employeeRepository = $employeeRepository;
     }
 
     /**
@@ -22,7 +23,7 @@ final class PayrollProvider
      */
     public function generatePayroll(SortingField $sortBy, ?string $filterBy = null): array
     {
-        $now = new \DateTimeImmutable(); //@TODO: inject clock
+        $now = $this->clock->now();
 
         $employees = $this->employeeRepository->findAll();
 
