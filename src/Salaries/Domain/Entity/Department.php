@@ -13,6 +13,7 @@ use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use function PHPUnit\Framework\assertNotEmpty;
 
 #[ORM\Entity]
 class Department
@@ -24,6 +25,9 @@ class Department
     #[ORM\Column(type: "string")]
     private string $name;
 
+    /**
+     * @var Collection<int,Employee>
+     */
     #[ORM\OneToMany(mappedBy: 'department', targetEntity: Employee::class)]
     private Collection $employees;
 
@@ -65,7 +69,7 @@ class Department
     }
 
     /**
-     * @return Collection|Employee[]
+     * @return Collection<int,Employee>
      */
     public function employees(): Collection
     {
@@ -88,7 +92,7 @@ class Department
 
     public function senioritySalarySupplement(): ?SenioritySupplement
     {
-        if (!is_null($this->senioritySalarySupplementAmount)) {
+        if (!is_null($this->senioritySalarySupplementAmount) && !is_null($this->senioritySalarySupplementCurrency) && $this->senioritySalarySupplementCurrency !== '') {
             return new SenioritySupplement(
                 new Money($this->senioritySalarySupplementAmount, new Currency($this->senioritySalarySupplementCurrency))
             );

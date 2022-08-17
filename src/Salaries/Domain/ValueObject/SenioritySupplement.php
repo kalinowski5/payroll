@@ -24,6 +24,10 @@ final class SenioritySupplement
 
     public function valuePerYearOfEmployment(): Money
     {
-        return new Money($this->amount, new Currency($this->currency));
+        return new Money(
+            $this->amount,
+            //@phpstan-ignore-next-line - Currency is always non-empty-string
+            new Currency($this->currency),
+        );
     }
 }
