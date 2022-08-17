@@ -20,7 +20,7 @@ final class PayrollProvider
     /**
      * @return array<PayrollRow>
      */
-    public function generatePayroll(SortingField $sortBy): array
+    public function generatePayroll(SortingField $sortBy, ?string $filterBy = null): array
     {
         $now = new \DateTimeImmutable(); //@TODO: inject clock
 
@@ -31,6 +31,10 @@ final class PayrollProvider
             new PayrollRow($employee->name(), $employee->department()->name(), $employee->payslipAt($now)),
             $employees
         );
+
+        if ($filterBy) {
+            $payroll = array_filter($payroll, fn(PayrollRow $payrollRow) => $payrollRow->matches($filterBy));
+        }
 
         usort($payroll, $this->sortRows($sortBy));
 

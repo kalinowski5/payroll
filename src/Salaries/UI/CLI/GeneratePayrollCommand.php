@@ -8,9 +8,8 @@ use Money\Formatter\IntlMoneyFormatter;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use XYZ\Salaries\Domain\Enum\SortingField;
@@ -21,6 +20,8 @@ use XYZ\Salaries\Domain\ValueObject\PayrollRow;
 final class GeneratePayrollCommand extends Command
 {
     private const MONEY_FORMAT = 'pl_PL';
+
+    private const FILTER_OPTION_NAME = 'filter';
 
     private const PAYROLL_TABLE_HEADERS = [
         'First name',
@@ -41,21 +42,24 @@ final class GeneratePayrollCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this->addOption(
+            self::FILTER_OPTION_NAME,
+            null,
+            InputArgument::OPTIONAL,
+            'Filter employees by first name, last name or department',
+        );
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $helper = $this->getHelper('question');
+        $sortingField = $this->askForSortingField($input, $output);
+        $filterBy = $input->getOption(self::FILTER_OPTION_NAME);
 
-        $sortingFieldQuestion = new ChoiceQuestion(
-            'How to sort the payroll?',
-            array_column(SortingField::cases(), 'value'),
-            0
-        );
+        $payroll = $this->payrollProvider->generatePayroll($sortingField, $filterBy);
 
-        $sortingField = SortingField::from($helper->ask($input, $output, $sortingFieldQuestion));
-
-        $employees = $this->payrollProvider->generatePayroll($sortingField);
-
-        $tableRows = array_map($this->mapPayrollIntoTableRows(), $employees);
+        $tableRows = array_map($this->mapPayrollIntoTableRows(), $payroll);
 
         $table = new Table($output);
         $table->setHeaders(self::PAYROLL_TABLE_HEADERS);
@@ -84,5 +88,20 @@ final class GeneratePayrollCommand extends Command
         $numberFormatter = new \NumberFormatter(self::MONEY_FORMAT, \NumberFormatter::CURRENCY);
 
         return new IntlMoneyFormatter($numberFormatter, $currencies);
+    }
+
+    private function askForSortingField(InputInterface $input, OutputInterface $output): SortingField
+    {
+        $helper = $this->getHelper('question');
+
+        $sortingFieldQuestion = new ChoiceQuestion(
+            'How to sort the payroll?',
+            array_column(SortingField::cases(), 'value'),
+            0
+        );
+
+        return SortingField::from(
+            $helper->ask($input, $output, $sortingFieldQuestion)
+        );
     }
 }

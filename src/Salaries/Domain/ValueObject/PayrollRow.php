@@ -12,4 +12,19 @@ final class PayrollRow
     )
     {
     }
+
+    public function matches(string $filter): bool
+    {
+        $employeeNameMatch = str_contains(
+            strtolower((string)$this->employeeName),
+            strtolower($filter)
+        );
+
+        $departmentNameMatch = str_contains(
+            strtolower($this->departmentName),
+            strtolower($filter)
+        );
+
+        return $employeeNameMatch || $departmentNameMatch;
+    }
 }

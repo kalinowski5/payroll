@@ -60,6 +60,21 @@ class PayrollProviderTest extends TestCase
     }
 
     /**
+     * @dataProvider provideFilteringTestCases
+     *
+     * @param array<int,array{string,string[]}> $expectedOrder
+     */
+    public function testPayrollCanBeFiltered(?string $filterBy, array $expectedOrder): void
+    {
+        self::assertEquals(
+            $expectedOrder,
+            array_map(function (PayrollRow $payrollRow): string {
+                return (string) $payrollRow->employeeName;
+            }, $this->systemUnderTest->generatePayroll(SortingField::BASE_SALARY, $filterBy)
+        ));
+    }
+
+    /**
      * @return array<int,array{SortingField,string[]}>
      */
     public function provideSortingTestCases(): array
@@ -75,6 +90,22 @@ class PayrollProviderTest extends TestCase
         ];
     }
 
+    /**
+     * @return array<int,array{?string,string[]}>
+     */
+    public function provideFilteringTestCases(): array
+    {
+        return [
+            [null, ['Anne Solider', 'John Doe', 'Kailey Ainslee']],
+            ['', ['Anne Solider', 'John Doe', 'Kailey Ainslee']],
+            ['Anne', ['Anne Solider']],
+            ['Kai', ['Kailey Ainslee']],
+            ['Do', ['John Doe']],
+            ['Example department', ['Anne Solider', 'John Doe']],
+            ['Acme department', ['Kailey Ainslee']],
+            ['Dummy department', []],
+        ];
+    }
 
     protected function setUp(): void
     {

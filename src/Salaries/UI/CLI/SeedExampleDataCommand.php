@@ -19,7 +19,7 @@ use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
 use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
 
 #[AsCommand(name: 'xyz:payroll:seed-example-data')]
-final class SeedExampleDataCommand extends Command //@TODO: Test me!
+final class SeedExampleDataCommand extends Command
 {
     private EntityManagerInterface $entityManager;
 
@@ -32,7 +32,7 @@ final class SeedExampleDataCommand extends Command //@TODO: Test me!
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        //@TODO: Extract into service
+        //@TODO: It can be extracted to a separate service
         $departments = [
             new Department(Uuid::v4(), 'Human Resources', new PercentageSupplement(15)),
             new Department(Uuid::v4(), 'Customer Service', new PercentageSupplement(10)),
