@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace XYZ\Tests\Salaries\UI\CLI;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
 use Money\Money;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -28,9 +29,9 @@ class GeneratePayrollCommandTest extends KernelTestCase
         $kernel = self::bootKernel();
         $this->application = new Application($kernel);
 
-
-        /** @var EntityManagerInterface $em */
-        $em = $kernel->getContainer()->get('doctrine')->getManager();
+        /** @var Registry $registry */
+        $registry = $kernel->getContainer()->get('doctrine');
+        $em = $registry->getManager();
         $department = new Department(
             Uuid::fromString('29e62eb2-4971-468e-9862-25ab3c9b8532'),
             'Example Department',
