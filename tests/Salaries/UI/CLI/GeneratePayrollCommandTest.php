@@ -55,10 +55,18 @@ class GeneratePayrollCommandTest extends KernelTestCase
         $bufferedOutput = new BufferedOutput();
         $table = new Table($bufferedOutput);
         $table
-            ->setHeaders(['First name', 'Last name', 'Department', 'Base salary', 'Total salary'])
+            ->setHeaders([
+                'First name',
+                'Last name',
+                'Department',
+                'Base salary',
+                'Salary supplement',
+                'Salary supplement type',
+                'Total salary'
+            ])
             ->setRows([
-                ['Adam', 'Kowalski', 'Human Resources ', '1 000,00 USD', '2 000,00 USD'],
-                ['Anna', 'Nowak', 'Customer Service', '2 000,00 USD', '2 400,00 USD'],
+                ['Adam', 'Kowalski', 'Human Resources ', '1 000,00 USD', '1 000,00 USD', 'Seniority', '2 000,00 USD'],
+                ['Anna', 'Nowak', 'Customer Service', '2 000,00 USD', '400,00 USD', 'Percentage',  '2 400,00 USD'],
             ])
             ->render()
         ;

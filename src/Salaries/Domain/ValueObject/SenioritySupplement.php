@@ -32,4 +32,9 @@ final class SenioritySupplement
             new Currency($this->currency),
         );
     }
+
+    public function name(): string
+    {
+        return 'Seniority';
+    }
 }

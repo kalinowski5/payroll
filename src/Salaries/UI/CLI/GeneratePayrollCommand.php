@@ -32,21 +32,35 @@ final class GeneratePayrollCommand extends Command
     {
         $employees = $this->employeeRepository->findAll();
 
-        $moneyFormatter = self::moneyFormatter();
-
         $now = new \DateTimeImmutable(); //@TODO: inject clock
 
         $table = new Table($output);
         $table
-            ->setHeaders(['First name', 'Last name', 'Department', 'Base salary', 'Total salary']) //@TODO: More columns
+            ->setHeaders([
+                'First name',
+                'Last name',
+                'Department',
+                'Base salary',
+                'Salary supplement',
+                'Salary supplement type',
+                'Total salary'
+            ])
             ->setRows(
-                array_map(fn (Employee $employee) => [
-                    $employee->name()->firstName(),
-                    $employee->name()->lastName(),
-                    $employee->department()->name(),
-                    $moneyFormatter->format($employee->baseSalary()->value()),
-                    $moneyFormatter->format($employee->totalSalaryAt($now)),
-                ], $employees),
+                array_map(function (Employee $employee) use ($now): array {
+                    $moneyFormatter = self::moneyFormatter();
+                    $employeeName = $employee->name();
+                    $salarySummary = $employee->payslipAt($now);
+
+                    return [
+                        $employeeName->firstName(),
+                        $employeeName->lastName(),
+                        $employee->department()->name(),
+                        $moneyFormatter->format($salarySummary->baseSalary),
+                        $moneyFormatter->format($salarySummary->supplementAmount),
+                        $salarySummary->supplementInfo,
+                        $moneyFormatter->format($salarySummary->totalSalary),
+                    ];
+                }, $employees),
             )
         ;
         $table->render();

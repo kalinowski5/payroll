@@ -11,13 +11,14 @@ use XYZ\Salaries\Domain\Entity\Employee;
 use XYZ\Salaries\Domain\ValueObject\BaseSalary;
 use XYZ\Salaries\Domain\ValueObject\EmployeeName;
 use XYZ\Salaries\Domain\ValueObject\PercentageSupplement;
+use XYZ\Salaries\Domain\ValueObject\Payslip;
 
 class PercentageSupplementTest extends TestCase
 {
     /**
      * @dataProvider provideTestCases
      */
-    public function testPercentageSupplement(BaseSalary $baseSalary, PercentageSupplement $percentageSupplement, Money $expectedTotalSalary): void
+    public function testTotalSalaryIncludesSupplement(BaseSalary $baseSalary, PercentageSupplement $percentageSupplement, Money $expectedTotalSalary): void
     {
         $department = new Department(Uuid::fromString('867f03c4-edb6-47cc-9ea7-2f4f43b62be1'), 'Customer Service', $percentageSupplement);
 
@@ -29,9 +30,9 @@ class PercentageSupplementTest extends TestCase
             $baseSalary,
         );
 
-        $actualTotalSalary = $employee->totalSalaryAt(new \DateTimeImmutable('2022-08-15'));
+        $actualPayslip = $employee->payslipAt(new \DateTimeImmutable('2022-08-15'));
 
-        self::assertEquals($expectedTotalSalary, $actualTotalSalary);
+        self::assertEquals($expectedTotalSalary, $actualPayslip->totalSalary);
     }
 
     /**

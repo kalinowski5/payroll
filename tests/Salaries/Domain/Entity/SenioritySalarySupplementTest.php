@@ -35,7 +35,7 @@ class SenioritySalarySupplementTest extends TestCase
             $baseSalary,
         );
 
-        $actualTotalSalary = $employee->totalSalaryAt($currentDate);
+        $actualTotalSalary = $employee->payslipAt($currentDate)->totalSalary;
 
         self::assertEquals($expectedTotalSalary, $actualTotalSalary);
     }
