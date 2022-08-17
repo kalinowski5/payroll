@@ -91,7 +91,11 @@ class Department
 
     public function senioritySalarySupplement(): ?SenioritySupplement
     {
-        if (!is_null($this->senioritySalarySupplementAmount) && !is_null($this->senioritySalarySupplementCurrency) && $this->senioritySalarySupplementCurrency !== '') {
+        if (
+            !is_null($this->senioritySalarySupplementAmount) &&
+            !is_null($this->senioritySalarySupplementCurrency) &&
+            $this->senioritySalarySupplementCurrency !== ''
+        ) {
             return new SenioritySupplement(
                 new Money($this->senioritySalarySupplementAmount, new Currency($this->senioritySalarySupplementCurrency))
             );

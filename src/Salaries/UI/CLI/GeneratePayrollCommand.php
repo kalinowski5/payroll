@@ -15,7 +15,7 @@ use XYZ\Salaries\Domain\Entity\Employee;
 use XYZ\Salaries\Domain\Repository\EmployeeRepository;
 
 #[AsCommand(name: 'xyz:payroll:generate')]
-final class GeneratePayrollCommand extends Command //@TODO: Test me!
+final class GeneratePayrollCommand extends Command
 {
     private const MONEY_FORMAT = 'pl_PL';
 
