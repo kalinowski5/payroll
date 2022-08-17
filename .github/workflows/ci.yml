@@ -9,6 +9,8 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - uses: php-actions/composer@v6
+              with:
+                  php_extensions: bcmath intl
             - uses: php-actions/phpstan@v3
               with:
                   path: src/
