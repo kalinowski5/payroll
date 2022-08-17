@@ -10,6 +10,8 @@ use Money\Money;
 
 final class SenioritySupplement
 {
+    public const MAX_NUMBER_OF_YEARS = 10;
+
     #[ORM\Column(type: "integer", nullable: true, options: ["comment" => 'Amount in cents'])]
     private int $amount;
 

@@ -9,6 +9,7 @@ use Money\Money;
 use Symfony\Component\Uid\Uuid;
 use XYZ\Salaries\Domain\ValueObject\BaseSalary;
 use XYZ\Salaries\Domain\ValueObject\EmployeeName;
+use XYZ\Salaries\Domain\ValueObject\SenioritySupplement;
 
 #[ORM\Entity]
 class Employee
@@ -70,10 +71,17 @@ class Employee
 
     public function totalSalaryAt(\DateTimeImmutable $date): Money
     {
+        $baseSalaryAmount = $this->baseSalary->value();
+
+        if ($date < $this->employmentDate) {
+            return new Money(0, $baseSalaryAmount->getCurrency());
+        }
+
         $percentageSupplement = $this->department->percentageSalarySupplement();
+        $senioritySupplement = $this->department->senioritySalarySupplement();
 
         if ($percentageSupplement) {
-            $baseSalaryAmount = $this->baseSalary->value();
+
             $supplementAmount = $baseSalaryAmount
                 ->multiply($percentageSupplement->value())
                 ->divide(100);
@@ -81,6 +89,14 @@ class Employee
             return Money::sum($baseSalaryAmount, $supplementAmount);
         }
 
-        return $this->baseSalary->value();
+        if ($senioritySupplement) {
+            $employedForNumberOfYears = $this->employmentDate()->diff($date)->y;
+            $multiplier = min(SenioritySupplement::MAX_NUMBER_OF_YEARS, $employedForNumberOfYears);
+            $supplementAmount = $senioritySupplement->valuePerYearOfEmployment()->multiply($multiplier);
+
+            return Money::sum($baseSalaryAmount, $supplementAmount);
+        }
+
+        return $baseSalaryAmount;
     }
 }
